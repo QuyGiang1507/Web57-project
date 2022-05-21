@@ -1,0 +1,22 @@
+.videoSidebar {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 2%;
+  right: 4px;
+  color: white;
+  height: 70%;
+}
+
+.videoSidebar__button {
+  padding: 10px;
+  text-align: center;
+  display: inline-block;
+}
+
+.videoSidebar__option {
+  padding: 10px;
+  margin-bottom: 350%;
+  display: inline-block;
+  position: relative;
+}

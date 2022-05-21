@@ -1,0 +1,15 @@
+.video {
+  position: relative;
+  background-color: #199ee6;
+  width: 80%;
+  height: 80vh;
+  max-width: 360px;
+  margin: 15vh auto;
+}
+
+.video__player {
+  object-fit: fill;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}

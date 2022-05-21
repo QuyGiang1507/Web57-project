@@ -1,0 +1,94 @@
+.create-post {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.create-post__container {
+    margin: 15vh auto;
+    padding: 10px 20px;
+    width: 60%;
+    height: 70%;
+    background-color: white;
+    border-radius: 10px;
+  	box-shadow: 
+        0 14px 28px rgba(0,0,0,0.25), 
+		0 10px 10px rgba(0,0,0,0.22);
+	position: relative;
+	overflow: hidden;
+}
+
+.create-post__content {
+    display: flex;
+    height: 100%;
+    justify-content: space-around;
+}
+
+.create-post__uploader {
+    flex-grow: 0;
+    padding: 4px;
+    width: 30%;
+    height: 80%;
+    border: 2px dashed rgba(22, 24, 35, 0.4);
+    border-radius: 8px;
+    background-color: rgba(197, 237, 236, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-post__form {
+    width: 50%;
+    padding: 4px;
+    height: 80%;
+}
+
+.create-post__title {
+    margin-bottom: 20px;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.create-post__label, .create-post__input {
+    display: block;
+}
+
+.create-post__input {
+    background-color: #eee;
+	border: none;
+	padding: 12px 15px;
+	margin: 8px 0;
+	width: 100%;
+}
+
+.create-post__description {
+    height: 80px;
+}
+
+.btn {
+	border-radius: 20px;
+	border: 1px solid #FF4B2B;
+	background-color: rgba(255, 75, 43, 0.8);
+	color: #FFFFFF;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 45px;
+	margin-top: 16px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+}
+
+.btn:active {
+	transform: scale(0.95);
+}
+
+.btn:focus {
+	outline: none;
+}
+
+.btn:hover {
+	background-color: rgba(255, 75, 43, 1);
+}
