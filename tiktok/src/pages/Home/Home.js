@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Video from "../../components/Video/Video";
 import Header from '../../components/Header/Header';
-import InfiniteScroll from 'react-infinite-scroller';
 import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import './Home.css'
 
 const MAX_LENGTH = 3;
@@ -12,13 +12,18 @@ function Home () {
         status: 'idle',
         data: [],
     })
+    const [skip, setSkip] = useState(0);
 
-    const [ skip, setSkip ] = useState(1)
-
-    const [ nextPageUrl, setNextPageUrl ] = useState(`http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`)
+    const nextPageUrl = useMemo(() => {
+        if (skip >= 0) {
+            return `http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
+        };
+        return null;
+    }, [skip])
 
     const fetchPosts = useCallback(async () => {
         try {
+
             setPostData((preState) => ({
                 ...preState,
                 status: "loading",
@@ -26,53 +31,56 @@ function Home () {
 
             const res = await axios.get(nextPageUrl);
 
-            console.log(res);
             if (res.data.success) {
-                setPostData({
-                    status: "success",
-                    data:  res.data.data.reaction,
-                    total: res.data.data.total,
-                });
+                const total = res.data.data.total;
+                if ((skip + 1) * MAX_LENGTH > Math.ceil(total / MAX_LENGTH)) {
+                    setSkip(-1);
+                } else {
+                    setSkip(skip + MAX_LENGTH)
+                }
+                setPostData((preState) => ({
+                    ...preState,
+                    status: 'success',
+                    data: [...preState.data, ...res.data.data.reaction]
+                }))
+ 
             } else {
+                setSkip(-1);
                 setPostData((preState) => ({
                     ...preState,
                     status: "error",
                 }));
             }
-
-            if(MAX_LENGTH * skip < postData.data.total) {
-                setSkip((preState) => ({
-                    skip: preState + 1,
-                }))
-                setNextPageUrl(`http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`)
-            } else {
-                setNextPageUrl(null)
-            }
-
         } catch (err) {
+            setSkip(-1);
             setPostData((preState) => ({
                 ...preState,
                 status: "error",
             }));
         }
         
-    }, [postData, nextPageUrl, skip]);
+    }, []);
 
     const hasMore = !!nextPageUrl;
 
+    useEffect(() => {
+        fetchPosts()
+    }, []);
+
+    console.log(postData);
     return (
         <div className="main">
             <Header />
             <div className="video__container">
                 <InfiniteScroll
-                    pageStart={0}
-                    loadMore={fetchPosts}
+                    dataLength={MAX_LENGTH * (skip + 1)}
+                    next={fetchPosts}
                     hasMore={hasMore}
-                    loader={<div className="loader" key={0}>Loading ...</div>}
+                    loader={<h4>Loading...</h4>}
                 >
-                    {postData.data.map((post) => (
+                    {postData.data.map((post, index) => (
                         <Video 
-                            key={post._id}
+                            key={index}
                             url={post.videoUrl}
                             channel={post.createdBy.username}
                             description={post.description}

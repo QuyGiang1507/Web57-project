@@ -72,6 +72,10 @@
 	width: 100%;
 }
 
+.form-input:focus {
+	outline: 4px double rgba(241, 134, 134, 0.8);
+}
+
 .container {
 	background-color: #fff;
 	border-radius: 10px;

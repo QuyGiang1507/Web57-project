@@ -18,9 +18,9 @@ function Header() {
 
     return(
         <div className="header">
-            <Link to="/" className="header__home">
+            <a href="" className="header__home">
                 <p>Home</p>
-            </Link>
+            </a>
             <div className="header__menu">
                 <Link to="/posts/create">
                     <CloudUploadIcon className="header__upload" style={{width: 'auto'}}/>
