@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../api/request';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import './Auth.css';
@@ -39,7 +39,7 @@ function Auth() {
         const { usernameSignin, passwordSignin } = values;
         try {
             const res = await axios({
-                url: 'http://localhost:9000/api/auth/login',
+                url: '/api/auth/login',
                 method: 'post',
                 data: {
                     username: usernameSignin,
@@ -59,7 +59,7 @@ function Auth() {
         const { usernameSignup, passwordSignup } = values;
         try {
             const res = await axios({
-                url: 'http://localhost:9000/api/auth/signup',
+                url: '/api/auth/signup',
                 method: 'post',
                 data: {
                     username: usernameSignup,
