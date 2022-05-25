@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -8,13 +8,24 @@ function Auth() {
     const [activePanel, setActivePanel] = useState("container");
 
     const { 
-        register, 
-        handleSubmit, 
-        formState: { errors } } = useForm(
+        register: registerSignup, 
+        handleSubmit: handleSignup,  
+        formState: { errors: errorsSignup } } = useForm(
             {
                 defaultValues: {
                     usernameSignup: '',
                     passwordSignup: '',
+                },
+                mode: 'onChange'
+            },
+        );
+
+    const { 
+        register: registerSignin, 
+        handleSubmit: handleSignin, 
+        formState: { errors: errorsSignin } } = useForm(
+            {
+                defaultValues: {
                     usernameSignin: '',
                     passwordSignin: '',
                 },
@@ -25,7 +36,6 @@ function Auth() {
     const navigate = useNavigate();
 
     const onSubmitSignin = async (values) => {
-        console.log(values);
         const { usernameSignin, passwordSignin } = values;
         try {
             const res = await axios({
@@ -36,97 +46,81 @@ function Auth() {
                     password: passwordSignin,
                 }
             })
+            if (res.data.success) {
+                navigate('/');
+            }
             console.log(res);
         } catch (err) {
             console.log(err);
         }
     };
 
-    const onSubmitSignup = (values) => {
-        
+    const onSubmitSignup = async (values) => {
+        const { usernameSignup, passwordSignup } = values;
+        try {
+            const res = await axios({
+                url: 'http://localhost:9000/api/auth/signup',
+                method: 'post',
+                data: {
+                    username: usernameSignup,
+                    password: passwordSignup,
+                }
+            });
+            if (res.data.success) {
+                navigate('/');
+            }
+            console.log(res);
+        } catch (err) {
+            console.log(err);
+        }
     };
-
-    function usernameSignupRequired() {
-        if(activePanel === "container right-panel-active") {
-            return {...register('usernameSignup', { required: true })};
-        }
-        return null;
-    }
-
-    function passwordSignupRequired() {
-        if(activePanel === "container right-panel-active") {
-            return {...register('passwordSignup', { required: true, minLength: 6})};
-        }
-        return null;
-    }
-
-    function usernameSigninRequired() {
-        if(activePanel === "container right-panel-active") {
-            return {...register('usernameSignin', { required: true })};
-        }
-        return null;
-    }
-
-    function passwordSigninRequired() {
-        if(activePanel === "container right-panel-active") {
-            return {...register('passwordSignin', { required: true, minLength: 6})};
-        }
-        return null;
-    }
-
-    useEffect(() => {
-        usernameSignupRequired();
-        passwordSignupRequired();
-        usernameSigninRequired();
-        passwordSigninRequired();
-    }, [activePanel])
 
     return (
         <div className="auth__container">
             <div className={activePanel}>
                 <div className="form-container sign-up-container">
                     <form className="auth__form"
-                        onSubmit={handleSubmit(onSubmitSignup)}
+                        onSubmit={handleSignup(onSubmitSignup)}
                     >
                         <h1 className="form-title">Create Account</h1>
                         <input 
                             type="text" 
                             placeholder="Username" 
                             className="form-input"
-                            {...register('usernameSignup', { required: true })}
+                            {...registerSignup('usernameSignup', { required: true })}
                         />
-                        {errors?.usernameSignup?.type === 'required' && <p>Username required</p>}
+                        {errorsSignup?.usernameSignup?.type === 'required' && <p>Username required</p>}
                         <input 
                             type="password" 
                             placeholder="Password" 
                             className="form-input"
-                            {...register('passwordSignup', { required: true, minLength: 6})}
+                            {...registerSignup('passwordSignup', { required: true, minLength: 6})}
                         />
-                        {errors?.passwordSignup?.type === 'required' && <p>Password required</p>}
-                        {errors?.passwordSignup?.type === 'minLength' && <p>Password must be at least 6 charactersrequired</p>}
+                        {errorsSignup?.passwordSignup?.type === 'required' && <p>Password required</p>}
+                        {errorsSignup?.passwordSignup?.type === 'minLength' && <p>Password must be at least 6 charactersrequired</p>}
                         <button type="submit" className="btn">Sign Up</button>
                     </form>
                 </div>
                 <div className="form-container sign-in-container">
                     <form className="auth__form"
-                        onSubmit={handleSubmit(onSubmitSignin)}
+                        onSubmit={handleSignin(onSubmitSignin)}
                     >
                         <h1 className="form-title">Sign in</h1>
                         <input 
                             type="text" 
                             placeholder="Username" 
                             className="form-input"
-                            {...register('usernameSignin', { required: true })}
+                            {...registerSignin('usernameSignin', { required: true })}
                         />
-                        {errors?.usernameSignin?.type === 'required' && <p>Username required</p>}
+                        {errorsSignin?.usernameSignin?.type === 'required' && <p>Username required</p>}
                         <input 
                             type="password" 
                             placeholder="Password" 
                             className="form-input"
-                            {...register('passwordSignin', { required: true, minLength: 6})}
+                            {...registerSignin('passwordSignin', { required: true, minLength: 6})}
                         />
-                        {errors?.passwordSignin?.type === 'required' && <p>Password required</p>}
-                        {errors?.passwordSignin?.type === 'minLength' && <p>Password must be at least 6 charactersrequired</p>}
+                        {errorsSignin?.passwordSignin?.type === 'required' && <p>Password required</p>}
+                        {errorsSignin?.passwordSignin?.type === 'minLength' && <p>Password must be at least 6 charactersrequired</p>}
                         <button  type="submit" className="btn">Sign In</button>
                     </form>
                 </div>

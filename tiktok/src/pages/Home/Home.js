@@ -33,7 +33,7 @@ function Home () {
 
             if (res.data.success) {
                 const total = res.data.data.total;
-                if ((skip + 1) * MAX_LENGTH > Math.ceil(total / MAX_LENGTH)) {
+                if (skip + MAX_LENGTH > total) {
                     setSkip(-1);
                 } else {
                     setSkip(skip + MAX_LENGTH)
@@ -61,6 +61,7 @@ function Home () {
         
     }, []);
 
+    console.log(nextPageUrl);
     const hasMore = !!nextPageUrl;
 
     useEffect(() => {
@@ -80,7 +81,7 @@ function Home () {
                 >
                     {postData.data.map((post, index) => (
                         <Video 
-                            key={index}
+                            key={post._id}
                             url={post.videoUrl}
                             channel={post.createdBy.username}
                             description={post.description}

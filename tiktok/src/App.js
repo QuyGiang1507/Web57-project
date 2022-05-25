@@ -9,7 +9,6 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="" element={<Home />} />
-        {/* <Route path="posts/:id" element={<PostDetail />} /> */}
         <Route path="posts/create" element={<CreatePost />} />
         <Route path="auth" element={<Auth />} />
         <Route path="*" element={<div>404 Page</div>} />
