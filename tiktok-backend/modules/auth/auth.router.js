@@ -3,6 +3,7 @@ const authController = require('./auth.controller');
 const authValid = require('./auth.validation');
 const validateInput = require('../../common/middlewares/validateInput');
 const getUser = require('../../common/middlewares/getUser');
+const isAuth = require('../../common/middlewares/isAuth');
 
 router.post(
     '/signup',
@@ -20,6 +21,12 @@ router.get(
     '/me',
     getUser,
     authController.getUserInfo,
+);
+
+router.get(
+    '/verify',
+    isAuth,
+    authController.verify,
 );
 
 module.exports = router;

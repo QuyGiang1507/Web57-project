@@ -16,10 +16,6 @@ const PostSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    commentCount: {
-        type: Number,
-        default: 0,
-    },
     tags: [{
         type: mongoose.Types.ObjectId
     }],
@@ -29,7 +25,7 @@ const PostSchema = new mongoose.Schema({
         ref: 'User',
     },
 }, {
-    timeStamp: true,
+    timestamps: true,
     toJSON: { virtual: true },
     toObject: { virtual: true }
 });

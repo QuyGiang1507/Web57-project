@@ -272,7 +272,7 @@ const dislikePost = async (req, res) => {
 const getCommentByPost = async (req, res) => {
     const { postId } = req.params;
 
-    const comments = await CommentModel.find({ postId }).populate('createdBy');
+    const comments = await CommentModel.find({ postId }).populate('createdBy').sort({ createdAt: -1 });
     const totalComments = await CommentModel.find({ postId }).countDocuments();
 
     res.send({

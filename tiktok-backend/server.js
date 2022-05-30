@@ -23,47 +23,8 @@ async function main() {
     console.log('Mongodb connected');
     const app = express();
 
-    const httpServer = createServer(app);
-    const io = new Server(httpServer, {
-        cors: {
-            origin: '*',
-        }
-    });
-
-    global.io = io;
-
-    ioEvent.on('new-comment', data => {
-        const { postId, newComment } = data;
-        console.log('vào đây')
-        io.in(`room-post-${postId}`).emit('new-comment', newComment);
-    })
-
-    io.on('connection', (socket) => {
-        console.log('socket connected', socket.id);
-
-        socket.emit('sayHi', { message: 'Server say hi' })
-
-        socket.on('hi', (data) => {
-            console.log('hi', data);
-
-            socket.emit('hi', { message: 'Server say hi' })
-        })
-        socket.on('join-post', postId => {
-            socket.join(`room-post-${postId}`);
-        })
-
-        socket.on('disconnect', () => {
-            console.log('socket disconnected', socket.id);
-        });
-    });
-
     app.use(cors());
     app.use(log);
-    app.use((req, res, next) => {
-        req.io = io;
-        req.ioEvent = ioEvent;
-        next();
-    });
     app.use(express.json());
 
     app.use(express.static('public'));
@@ -81,7 +42,7 @@ async function main() {
 
     app.use(errorHandler);
 
-    httpServer.listen(process.env.PORT || 9000, (err) => {
+    app.listen(process.env.PORT || 9000, (err) => {
         if(err) throw err;
 
         console.log('Server connected');

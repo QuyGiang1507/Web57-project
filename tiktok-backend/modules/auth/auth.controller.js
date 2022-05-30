@@ -68,8 +68,18 @@ const getUserInfo = async (req, res) => {
     res.send({ success: 1, data: userInfo });
 }
 
+const verify = (req, res) => {
+    const { user } = req;
+
+    res.send({
+        success: 1, 
+        data: user,
+    })
+}
+
 module.exports = {
     signUp,
     login,
     getUserInfo,
+    verify,
 };

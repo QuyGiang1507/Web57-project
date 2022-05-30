@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import axios from '../../api/request';
+import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useSearchParams } from 'react-router-dom'; 
 import './Auth.css';
 
 function Auth() {
@@ -34,6 +36,8 @@ function Auth() {
         );
 
     const navigate = useNavigate();
+    const { login } = useAuth();       
+    const [searchParams] = useSearchParams();
 
     const onSubmitSignin = async (values) => {
         const { usernameSignin, passwordSignin } = values;
@@ -47,9 +51,12 @@ function Auth() {
                 }
             })
             if (res.data.success) {
-                navigate('/');
+                login({
+                    _id: res.data.data._id,
+                    token: res.data.data.token,
+                    returnUrl: searchParams.get('returnUrl') ?? ''
+                })
             }
-            console.log(res);
         } catch (err) {
             console.log(err);
         }

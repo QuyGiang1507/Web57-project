@@ -6,9 +6,12 @@
 }
 
 .create-post__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin: 15vh auto;
     padding: 10px 20px;
-    width: 60%;
+    width: 40%;
     height: 70%;
     background-color: white;
     border-radius: 10px;
@@ -19,27 +22,8 @@
 	overflow: hidden;
 }
 
-.create-post__content {
-    display: flex;
-    height: 100%;
-    justify-content: space-around;
-}
-
-.create-post__uploader {
-    flex-grow: 0;
-    padding: 4px;
-    width: 30%;
-    height: 80%;
-    border: 2px dashed rgba(22, 24, 35, 0.4);
-    border-radius: 8px;
-    background-color: rgba(197, 237, 236, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .create-post__form {
-    width: 50%;
+    width: 80%;
     padding: 4px;
     height: 80%;
 }
@@ -91,4 +75,5 @@
 
 .btn:hover {
 	background-color: rgba(255, 75, 43, 1);
+    cursor: pointer;
 }

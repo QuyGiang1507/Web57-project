@@ -16,7 +16,7 @@ const CommentSchema = mongoose.Schema({
         ref: 'User',
     }
 }, {
-    timeStamp: true
+    timestamps: true
 });
 
 const CommentModel = mongoose.model('Comment', CommentSchema);

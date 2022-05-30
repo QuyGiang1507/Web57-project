@@ -12,6 +12,7 @@
   padding: 10px;
   text-align: center;
   display: inline-block;
+  cursor: pointer;
 }
 
 .videoSidebar__option {

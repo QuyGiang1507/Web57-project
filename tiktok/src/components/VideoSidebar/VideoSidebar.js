@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./VideoSidebar.css";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import MessageIcon from '@mui/icons-material/Message';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Comment from '../Comment/Comment';
+import axios from '../../api/request';
 
-function VideoSideBar({ likes, messages }) {
+function VideoSideBar({ likes, postId }) {
   const [linked, setLinked] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -17,6 +18,34 @@ function VideoSideBar({ likes, messages }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [comments, setComments] = useState({
+    status: 'idle',
+    data: {
+      data: [],
+      total: 0,
+    },
+  })
+
+  const getCommentsByPost = async() => {
+    try {
+      const res = await axios.get(`/api/posts/${postId}/comments`)
+      if (res.data.success) {
+        setComments({
+          status: 'success',
+          data: {
+            data: res.data.data.data,
+            total: res.data.data.total,
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    getCommentsByPost()
+  }, [setComments]);
 
   return (
     <div className="videoSidebar">
@@ -55,8 +84,8 @@ function VideoSideBar({ likes, messages }) {
       </div>
 
       <div className="videoSidebar__button">
-        <MessageIcon fontSize="large" />
-        <p>{messages}</p>
+        <Comment comments={comments} postId={postId} getCommentsByPost={getCommentsByPost}/>
+        <p>{comments.data.total}</p>
       </div>
     </div>
   );

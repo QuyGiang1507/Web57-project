@@ -1,37 +1,110 @@
 import React from 'react';
+import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
+import axios from '../../api/request';
 import Header from '../../components/Header/Header';
 import './CreatePost.css';
 
 function CreatePost () {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            description: "",
+            song: "",
+        },
+    });
+
+    const navigate = useNavigate();
+
+    const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        try {
+            const res = await axios({
+                url: '/api/upload',
+                method: 'POST',
+                data: formData,
+            });
+            return res.data;
+        } catch (err) {
+            return '';
+        }
+    }
+
+    const onChangeFile = async e => {
+        const files = e.target.files;
+        if (files.length) {
+            const videoUrl = await uploadFile(files[0]);
+            setValue('videoUrl', videoUrl);
+        }
+    };
+
+    const onSubmit = async values => {
+        console.log(values);
+        if (values.videoUrl) {
+            try {
+                const res = await axios({
+                    url: '/api/posts',
+                    method: 'POST',
+                    data: {
+                        videoUrl: values.videoUrl.data,
+                        song: values.song || "Original audio",
+                        description: values.description
+                    }
+                })
+                if (res.data.success) {
+                    navigate('/')
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+
     return (
         <div className="create-post">
             <Header />
-            <div className="create-post__container">
+            <form 
+                onSubmit={handleSubmit(onSubmit)}
+                className="create-post__container"
+            >
                 <p className="create-post__title">Upload Video</p>
-                <div className="create-post__content">
-                    <div className="create-post__uploader">        
-                        <div className="create-post__upload">
-                            <p>Input your video to upload</p>
-                            <button className="btn">
-                                <label>Choose Video
-                                    <input type="file" accept="video" id="video" style={{display: "none"}} className="create-post__upload-video"/>
-                                </label>
-                            </button>
-                        </div>
+                <div className="create-post__form">
+                    <div>
+                        <label className="create-post__label">Description</label>
+                        <textarea 
+                            type="text" 
+                            className="create-post__input create-post__description" 
+                            rows="2"
+                            {...register('description', { required: true })}
+                        ></textarea>
+                        {errors?.description?.type === 'required' && <p>Description is required</p>}
                     </div>
-                    <div className="create-post__form">
-                        <div>
-                            <label className="create-post__label">Description</label>
-                            <textarea  className="create-post__input create-post__description" rows="2"></textarea>
-                        </div>
-                        <div>
-                            <label className="create-post__label">Song</label>
-                            <input  className="create-post__input"/>
-                        </div>
-                        <button className="btn btn-post">Post</button>
+                    <div>
+                        <label className="create-post__label">Song</label>
+                        <input 
+                            type="text" 
+                            className="create-post__input"
+                            {...register('song')}
+                        />
                     </div>
+                    <div>
+                        <label className="create-post__label">Choose Video</label>
+                        <input 
+                            className="create-post__input" 
+                            type="file" accept="video" 
+                            id="video"
+                            onChange={onChangeFile}
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-post">Submit</button>
                 </div>
-            </div>
+            </form>
         </div>
     )
 }

@@ -1,5 +1,4 @@
 const CommentModel = require('./comment');
-const PostModel = require('../post/post');
 
 const getAllComments = async (req, res) => {
     try {
@@ -26,7 +25,7 @@ const getAllComments = async (req, res) => {
 const createComment = async (req, res) => {
     try {
         const { postId, content } = req.body;
-        const { user, ioEvent, io } = req;
+        const { user } = req;
 
         const comment = await CommentModel.create({
             postId,
@@ -45,18 +44,9 @@ const createComment = async (req, res) => {
             }
         }
 
-        const updatePost = await PostModel.findOneAndUpdate(
-            { _id: postId },
-            { $inc: { commentCount: 1 } },
-            { new: true },
-        )
-
-        global.io.in(`room-post-${postId}`).emit('new-comment', newComment);
-
         res.send({
             success: 1,
             data: newComment,
-            updatePost: updatePost,
         })
     } catch (err) {
         res
