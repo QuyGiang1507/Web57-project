@@ -65,11 +65,11 @@ const getAllPosts = async (req, res) => {
 
         if (user) {
             const postIds = posts.map(post => post._id)
-    
+            
             const reactionPosts = await reactionModel.find({
                 $and: [
                     {postId: {$in: postIds}},
-                    {userId: {$in: [user._id]}}
+                    {userId: {$in: [user]}}
                 ]
             })
     

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Video from "../../components/Video/Video";
 import Header from '../../components/Header/Header';
-import axios from '../../api/request';
+import request from '../../api/request';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './Home.css'
 
@@ -29,7 +29,7 @@ function Home () {
                 status: "loading",
             }));
 
-            const res = await axios.get(nextPageUrl)
+            const res = await request.get(nextPageUrl)
             if (res.data.success) {
                 setPostData((preState) => ({
                     ...preState,
@@ -57,7 +57,7 @@ function Home () {
 
     const fetchMorePosts = async () => {
         try {
-            const res = await axios.get(nextPageUrl)
+            const res = await request.get(nextPageUrl)
             if (res.data.success) {
                 const total = res.data.data.total;
                 if (skip + MAX_LENGTH > total) {
@@ -114,6 +114,7 @@ function Home () {
                             description={post.description}
                             song={post.song}
                             likes={post.likeCount}
+                            isliked={post.isliked}
                         />
                     ))}
                 </InfiniteScroll>

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Video from "../../components/Video/Video";
 import Header from '../../components/Header/Header';
-import axios from '../../api/request';
+import request from '../../api/request';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import './Home.css'
 
@@ -28,7 +28,7 @@ function Home () {
                 status: "loading",
             }));
 
-            const res = await axios.get('/api/posts')
+            const res = await request.get('/api/posts')
             if (res.data.success) {
                 {/*const total = res.data.data.total;
                 if (skip + MAX_LENGTH > total) {

@@ -1,6 +1,7 @@
 .video {
   position: relative;
-  background-color: #199ee6;
+  background-color: black;
+  border-radius: 10px;
   width: 80%;
   height: 80vh;
   max-width: 360px;

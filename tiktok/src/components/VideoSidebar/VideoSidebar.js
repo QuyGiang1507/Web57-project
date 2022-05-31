@@ -6,10 +6,12 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Comment from '../Comment/Comment';
-import axios from '../../api/request';
+import request from '../../api/request';
+import isAuth from '../../hooks/useAuth';
 
-function VideoSideBar({ likes, postId }) {
-  const [linked, setLinked] = useState(false);
+function VideoSideBar({ likes, postId, isliked }) {
+  const [linked, setLinked] = useState(isliked);
+  const [likeCount, setLikeCount] = useState(likes);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -18,6 +20,9 @@ function VideoSideBar({ likes, postId }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const { isAuthenticated } = isAuth();
+
   const [comments, setComments] = useState({
     status: 'idle',
     data: {
@@ -28,7 +33,7 @@ function VideoSideBar({ likes, postId }) {
 
   const getCommentsByPost = async() => {
     try {
-      const res = await axios.get(`/api/posts/${postId}/comments`)
+      const res = await request.get(`/api/posts/${postId}/comments`)
       if (res.data.success) {
         setComments({
           status: 'success',
@@ -40,6 +45,32 @@ function VideoSideBar({ likes, postId }) {
       }
     } catch (err) {
       console.log(err)
+    }
+  }
+
+  const likePost = async () => {
+    try {
+      if (isAuthenticated) {
+        setLinked(true);
+        setLikeCount(likeCount + 1);
+        const res = await request.put(`/api/posts/${postId}/like`);
+        console.log(res);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const dislikePost = async () => {
+    try {
+      if (isAuthenticated) {
+        setLinked(false);
+        setLikeCount(likeCount - 1);
+        const res = await request.put(`/api/posts/${postId}/dislike`);
+        console.log(res);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -73,14 +104,14 @@ function VideoSideBar({ likes, postId }) {
       </div>
       <div className="videoSidebar__button">
         {linked ? (
-          <FavoriteIcon fontSize="large" onClick={(e) => setLinked(false)} />
+          <FavoriteIcon fontSize="large" onClick={dislikePost} />
         ) : (
           <FavoriteBorderIcon 
             fontSize="large" 
-            onClick={(e) => setLinked(true)}
+            onClick={likePost}
           />        
         )}
-        <p>{linked ? likes + 1 : likes}</p>
+        <p>{likeCount}</p>
       </div>
 
       <div className="videoSidebar__button">

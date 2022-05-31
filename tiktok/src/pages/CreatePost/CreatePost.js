@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import axios from '../../api/request';
+import request from '../../api/request';
 import Header from '../../components/Header/Header';
 import './CreatePost.css';
 
@@ -25,7 +25,7 @@ function CreatePost () {
         formData.append('file', file);
     
         try {
-            const res = await axios({
+            const res = await request({
                 url: '/api/upload',
                 method: 'POST',
                 data: formData,
@@ -48,7 +48,7 @@ function CreatePost () {
         console.log(values);
         if (values.videoUrl) {
             try {
-                const res = await axios({
+                const res = await request({
                     url: '/api/posts',
                     method: 'POST',
                     data: {

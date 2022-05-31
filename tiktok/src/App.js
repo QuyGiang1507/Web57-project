@@ -1,6 +1,6 @@
 import './App.css';
 import react, { useState, useEffect, createContext } from 'react';
-import axios from './api/request';
+import request from './api/request';
 import HomeListAll from './pages/Home/HomeListAll';
 import Home from './pages/Home/Home';
 import Auth from './pages/Auth/Auth';
@@ -25,7 +25,7 @@ function App() {
     }
 
     try {
-      const res = await axios.get('/api/auth/verify');
+      const res = await request.get('/api/auth/verify');
       if (res.data.success) {
         setUserInfo({ status: 'success', data: res.data.data });
       } else {

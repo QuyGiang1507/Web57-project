@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../../api/request';
+import request from '../../api/request';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -10,6 +10,7 @@ function Auth() {
     const [activePanel, setActivePanel] = useState("container");
 
     const { 
+        resetField: resetSignup,
         register: registerSignup, 
         handleSubmit: handleSignup,  
         formState: { errors: errorsSignup } } = useForm(
@@ -23,6 +24,7 @@ function Auth() {
         );
 
     const { 
+        resetField: resetSignin,
         register: registerSignin, 
         handleSubmit: handleSignin, 
         formState: { errors: errorsSignin } } = useForm(
@@ -42,7 +44,7 @@ function Auth() {
     const onSubmitSignin = async (values) => {
         const { usernameSignin, passwordSignin } = values;
         try {
-            const res = await axios({
+            const res = await request({
                 url: '/api/auth/login',
                 method: 'post',
                 data: {
@@ -65,20 +67,22 @@ function Auth() {
     const onSubmitSignup = async (values) => {
         const { usernameSignup, passwordSignup } = values;
         try {
-            const res = await axios({
+            const res = await request({
                 url: '/api/auth/signup',
-                method: 'post',
+                method: 'POST',
                 data: {
                     username: usernameSignup,
                     password: passwordSignup,
                 }
             });
             if (res.data.success) {
-                navigate('/');
+                resetSignup();
+                setActivePanel("container");
+            } else {
+                console.log(res.data.message);
             }
-            console.log(res);
         } catch (err) {
-            console.log(err);
+            console.log(err.message);
         }
     };
 

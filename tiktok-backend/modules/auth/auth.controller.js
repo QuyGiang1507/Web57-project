@@ -7,7 +7,7 @@ const signUp = async (req, res, next) => {
     const { username, password } = req.body;
 
     const existedUser = await UserModel.findOne({ username });
-
+    
     if (existedUser) {
         throw new HttpError('đăng ký thất bại', 400);
     }

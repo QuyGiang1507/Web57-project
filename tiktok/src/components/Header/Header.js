@@ -17,6 +17,8 @@ const AuthRender = () => {
         setAnchorEl(null);
     };
 
+    const { logout } = useAuth();
+
     return (
         <div>
             <PersonIcon 
@@ -38,7 +40,7 @@ const AuthRender = () => {
                 }}
                 >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={logout}>Logout</MenuItem>
             </Menu>
         </div>
     )
