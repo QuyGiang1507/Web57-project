@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import request from '../../api/request';
 import useAuth from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom'; 
 import './Auth.css';
@@ -37,7 +36,6 @@ function Auth() {
             },
         );
 
-    const navigate = useNavigate();
     const { login } = useAuth();       
     const [searchParams] = useSearchParams();
 
@@ -60,7 +58,8 @@ function Auth() {
                 })
             }
         } catch (err) {
-            console.log(err);
+            resetSignin();
+            alert(err.response.data.message);
         }
     };
 
@@ -78,11 +77,10 @@ function Auth() {
             if (res.data.success) {
                 resetSignup();
                 setActivePanel("container");
-            } else {
-                console.log(res.data.message);
             }
         } catch (err) {
-            console.log(err.message);
+            resetSignup();
+            alert(err.response.data.message);
         }
     };
 

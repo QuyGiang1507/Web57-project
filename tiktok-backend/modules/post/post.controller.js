@@ -55,7 +55,7 @@ const getAllPosts = async (req, res) => {
                         select: 'username'
                     }
                 })
-                .sort(sortParams)
+                .sort({createdAt: -1})
                 .skip(pagination.skip)
                 .limit(pagination.limit),
             PostModel.find(filter).countDocuments()
@@ -165,18 +165,25 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-    const { postId } = req.params;
+    try {
+        const { postId } = req.params;
 
-    const deletedPost = await PostModel.findOneAndDelete(
-        { _id: postId },
-        updatePostData,
-        { new: true },
-    );
+        const deletedPost = await PostModel.findOneAndDelete(
+            { _id: postId },
+            { new: true },
+        );
 
-    res.send({
-        success: 1,
-        data: deletedPost,
-    });
+        res.send({
+            success: 1,
+            data: deletedPost,
+        });
+    } catch (err) {
+        res.status(400).send({
+            success: 0,
+            data: null,
+            message: err.message || 'Something went wrong',
+        });
+    }
 };
 
 const likePost = async (req, res) => {

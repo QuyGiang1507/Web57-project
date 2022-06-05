@@ -8,8 +8,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Comment from '../Comment/Comment';
 import request from '../../api/request';
 import isAuth from '../../hooks/useAuth';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import { useForm } from 'react-hook-form';
 
-function VideoSideBar({ likes, postId, isliked }) {
+function VideoSideBar({ likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
   const [linked, setLinked] = useState(isliked);
   const [likeCount, setLikeCount] = useState(likes);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -20,6 +23,11 @@ function VideoSideBar({ likes, postId, isliked }) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [openUpdateModal, setopenUpdateModal] = useState(false);
+  const handleOpenUpdateModal = () => setopenUpdateModal(true);
+  const handleCloseUpdateModal = () => setopenUpdateModal(false);
+
+  const [ disabled, setDisabled ] = useState(true);
 
   const { isAuthenticated } = isAuth();
 
@@ -30,6 +38,59 @@ function VideoSideBar({ likes, postId, isliked }) {
       total: 0,
     },
   })
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
+  const uploadFile = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+        const res = await request({
+            url: '/api/upload',
+            method: 'POST',
+            data: formData,
+        });
+        return res.data;
+    } catch (err) {
+        return '';
+    }
+  };
+
+  const onChangeFile = async e => {
+    const files = e.target.files;
+    if (files.length) {
+        const videoUrl = await uploadFile(files[0]);
+        setValue('videoUrl', videoUrl);
+        videoUrl ? setDisabled(false) : setDisabled(true);
+    }
+  };
+
+  const handleUpdateData = async values => {
+    const updateData = {};
+
+    if (values.videoUrl) {
+      updateData.videoUrl = values.videoUrl.data;
+    }
+
+    if (values.description) {
+      updateData.description = values.description;
+    }
+
+    if (values.song) {
+      updateData.song = values.song;
+    }
+
+    console.log(updateData.videoUrl);
+
+    await handleUpdatePost(postId, updateData);
+    await handleCloseUpdateModal();
+  }
 
   const getCommentsByPost = async() => {
     try {
@@ -98,8 +159,16 @@ function VideoSideBar({ likes, postId, isliked }) {
             'aria-labelledby': 'basic-button',
           }}
         >
-          <MenuItem onClick={handleClose}>Update Post</MenuItem>
-          <MenuItem onClick={handleClose}>Delete</MenuItem>
+          <div onClick={handleClose}>
+            <MenuItem 
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+                handleOpenUpdateModal();
+              }}>Update Post
+            </MenuItem>
+            <MenuItem onClick={(e) => handleDeletePost(postId)}>Delete</MenuItem>
+          </div>
         </Menu>
       </div>
       <div className="videoSidebar__button">
@@ -118,6 +187,54 @@ function VideoSideBar({ likes, postId, isliked }) {
         <Comment comments={comments} postId={postId} getCommentsByPost={getCommentsByPost}/>
         <p>{comments.data.total}</p>
       </div>
+
+      <Modal
+        open={openUpdateModal}
+        onClose={(e) => {
+          e.stopPropagation();
+          handleCloseUpdateModal();
+        }}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <form 
+          className="videoSideBar__update-container"
+          onSubmit={
+            handleSubmit(handleUpdateData)
+          }
+        >
+          <p className="videoSideBar__title">Upload Video</p>
+          <div className="videoSideBar__form">
+              <div>
+                  <label className="videoSideBar__label">Description</label>
+                  <textarea 
+                      type="text" 
+                      className="videoSideBar__input videoSideBar__description" 
+                      rows="2"
+                      {...register('description')}
+                  ></textarea>
+              </div>
+              <div>
+                  <label className="videoSideBar__label">Song</label>
+                  <input 
+                      type="text" 
+                      className="videoSideBar__input"
+                      {...register('song')}
+                  />
+              </div>
+              <div>
+                  <label className="videoSideBar__label">Choose Video</label>
+                  <input 
+                      className="videoSideBar__input" 
+                      type="file" accept="video" 
+                      id="video"
+                      onChange={onChangeFile}
+                  />
+              </div>
+              <button type="submit" className="btn btn-post" disabled={disabled}>Submit</button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

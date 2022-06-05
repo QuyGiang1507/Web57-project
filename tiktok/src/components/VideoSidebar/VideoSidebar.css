@@ -20,4 +20,83 @@
   margin-bottom: 350%;
   display: inline-block;
   position: relative;
+  cursor: pointer;
+}
+
+.videoSideBar__update-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 25vh auto;
+  padding: 1.5% 20px;
+  width: 50%;
+  height: auto;
+  min-width: 400px;
+  min-height: 400px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 
+      0 14px 28px rgba(0,0,0,0.25), 
+  0 10px 10px rgba(0,0,0,0.22);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 24;
+  border-radius: 4px;
+}
+
+.videoSideBar__form {
+  width: 80%;
+  padding: 4px;
+  height: 80%;
+}
+
+.videoSideBar__title {
+  margin-bottom: 12px;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.videoSideBar__label, .videoSideBar__input {
+  display: block;
+}
+
+.videoSideBar__input {
+  background-color: #eee;
+  border: none;
+  padding: 4px 8px;
+  margin: 8px 0;
+  width: 100%;
+}
+
+.videoSideBar__description {
+  height: 80px;
+}
+
+.btn {
+  border-radius: 20px;
+  border: 1px solid #FF4B2B;
+  background-color: rgba(255, 75, 43, 0.8);
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  margin-top: 16px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+  width: 100%;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:hover {
+  background-color: rgba(255, 75, 43, 1);
+  cursor: pointer;
 }

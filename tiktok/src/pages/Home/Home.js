@@ -89,6 +89,50 @@ function Home () {
         }
     }
 
+    const handleUpdatePost = async (postId, data) => {
+        try {
+            const res = await request({
+                url: `/api/posts/${postId}`,
+                method: "PUT",
+                data: data,
+            })
+            if (res.data.success) {
+                const newPostData = postData.data.map((post) => {
+                    return post._id === res.data.data._id ? res.data.data : post;
+                })
+
+                setPostData(() => ({
+                    status: "success",
+                    data: newPostData,
+                }))
+            }
+        } catch (err) {
+            alert(err.response.message);
+        }
+    };
+
+    const handleDeletePost = async (postId) => {
+        try {
+            const res = await request({
+                url: `/api/posts/${postId}`,
+                method: 'DELETE',
+            })
+
+            if (res.data.success) {
+                const newPostData = postData.data.filter((post) => {
+                    return post._id !== res.data.data._id;
+                });
+        
+                setPostData(() => ({
+                    status: "success",
+                    data: newPostData,
+                }))
+            }
+        } catch (err) {
+            alert(err.response.message);
+        }
+    };
+
     useEffect(() => {
         fetchPosts()
     }, []);
@@ -115,6 +159,8 @@ function Home () {
                             song={post.song}
                             likes={post.likeCount}
                             isliked={post.isliked}
+                            handleUpdatePost={handleUpdatePost}
+                            handleDeletePost={handleDeletePost}
                         />
                     ))}
                 </InfiniteScroll>

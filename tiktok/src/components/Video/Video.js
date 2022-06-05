@@ -3,7 +3,7 @@ import "./Video.css";
 import VideoFooter from "../VideoFooter/VideoFooter";
 import VideoSidebar from "../VideoSidebar/VideoSidebar";
 
-function Video({ url, channel, description, song, likes, postId, isliked }) {
+function Video({ url, channel, description, song, likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
     const [playing, setPlaying] = useState(false);
     const videoRef = useRef(null); 
 
@@ -23,7 +23,7 @@ function Video({ url, channel, description, song, likes, postId, isliked }) {
             threshold: 1.0,
         };
     
-        let handlePlay = (entries, observer) => {
+        const handlePlay = (entries, observer) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 onPlay();
@@ -57,7 +57,7 @@ function Video({ url, channel, description, song, likes, postId, isliked }) {
             ></video>
 
             <VideoFooter channel={channel} description={description} song={song}/>
-            <VideoSidebar likes={likes} postId={postId} isliked={isliked}/>
+            <VideoSidebar likes={likes} postId={postId} isliked={isliked} handleUpdatePost={handleUpdatePost} handleDeletePost={handleDeletePost}/>
         </div>
     )
 }

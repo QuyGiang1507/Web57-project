@@ -9,7 +9,7 @@ const signUp = async (req, res, next) => {
     const existedUser = await UserModel.findOne({ username });
     
     if (existedUser) {
-        throw new HttpError('đăng ký thất bại', 400);
+        throw new HttpError('đăng ký thất bại, username đã tồn tại', 400);
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -35,7 +35,7 @@ const login = async (req, res) => {
     const existedUser = await UserModel.findOne({ username });
 
     if (!existedUser) {
-        throw new HttpError('đăng nhập thất bại (không có username)', 400);
+        throw new HttpError('đăng nhập thất bại, username không tồn tại', 400);
     }
 
     const hashPassword = existedUser.password;

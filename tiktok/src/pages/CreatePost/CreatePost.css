@@ -12,7 +12,7 @@
     margin: 15vh auto;
     padding: 10px 20px;
     width: 40%;
-    height: 70%;
+    height: 65%;
     background-color: white;
     border-radius: 10px;
   	box-shadow: 
@@ -20,6 +20,7 @@
 		0 10px 10px rgba(0,0,0,0.22);
 	position: relative;
 	overflow: hidden;
+    justify-content: center;
 }
 
 .create-post__form {
@@ -63,6 +64,13 @@
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
+    cursor: pointer;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+    cursor: not-allowed;
 }
 
 .btn:active {
@@ -71,9 +79,4 @@
 
 .btn:focus {
 	outline: none;
-}
-
-.btn:hover {
-	background-color: rgba(255, 75, 43, 1);
-    cursor: pointer;
 }

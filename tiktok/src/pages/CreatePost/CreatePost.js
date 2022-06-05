@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import request from '../../api/request';
@@ -17,6 +17,8 @@ function CreatePost () {
             song: "",
         },
     });
+
+    const [ disabled, setDisabled ] = useState(true);
 
     const navigate = useNavigate();
 
@@ -41,6 +43,7 @@ function CreatePost () {
         if (files.length) {
             const videoUrl = await uploadFile(files[0]);
             setValue('videoUrl', videoUrl);
+            videoUrl ? setDisabled(false) : setDisabled(true);
         }
     };
 
@@ -58,7 +61,7 @@ function CreatePost () {
                     }
                 })
                 if (res.data.success) {
-                    navigate('/')
+                    window.location.href = "/"
                 }
             } catch (err) {
                 console.log(err);
@@ -102,7 +105,11 @@ function CreatePost () {
                             onChange={onChangeFile}
                         />
                     </div>
-                    <button type="submit" className="btn btn-post">Submit</button>
+                    <button
+                        type="submit" 
+                        className="btn btn-post"
+                        disabled={disabled}
+                    >Submit</button>
                 </div>
             </form>
         </div>
