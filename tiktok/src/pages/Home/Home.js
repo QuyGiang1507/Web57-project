@@ -17,7 +17,7 @@ function Home () {
 
     const nextPageUrl = useMemo(() => {
         if (skip >= 0) {
-            return `http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
+            return `https://upload-video-backend.herokuapp.com/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
         };
         return null;
     }, [skip])
