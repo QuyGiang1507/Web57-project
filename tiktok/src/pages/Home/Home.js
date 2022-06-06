@@ -17,10 +17,12 @@ function Home () {
 
     const nextPageUrl = useMemo(() => {
         if (skip >= 0) {
-            return `https://upload-video-backend.herokuapp.com/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
+            return `${process.env.REACT_APP_BASE_PATH}/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
         };
         return null;
     }, [skip])
+
+    console.log(process.env.REACT_APP_BASE_PATH)
 
     const fetchPosts = useCallback(async () => {
         try {

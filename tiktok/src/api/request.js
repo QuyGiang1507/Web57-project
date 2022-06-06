@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const ins = axios.create({
-  baseURL: 'https://upload-video-backend.herokuapp.com/',
+  baseURL: process.env.REACT_APP_BASE_PATH,
 });
 
 ins.interceptors.request.use(function (config) {
