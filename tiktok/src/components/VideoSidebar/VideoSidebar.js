@@ -8,11 +8,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Comment from '../Comment/Comment';
 import request from '../../api/request';
 import isAuth from '../../hooks/useAuth';
-import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useForm } from 'react-hook-form';
 
-function VideoSideBar({ likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
+function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
   const [linked, setLinked] = useState(isliked);
   const [likeCount, setLikeCount] = useState(likes);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,12 +23,23 @@ function VideoSideBar({ likes, postId, isliked, handleUpdatePost, handleDeletePo
     setAnchorEl(null);
   };
   const [openUpdateModal, setopenUpdateModal] = useState(false);
-  const handleOpenUpdateModal = () => setopenUpdateModal(true);
+
+  const { isAuthenticated, user } = isAuth();
+
+  const handleOpenUpdateModal = () => {
+    if (isAuthenticated) {
+      if (channel === user.username) {
+        setopenUpdateModal(true);
+      } else {
+        alert("This post is not yours");
+      }
+    } else {
+      alert("You need to update the post");
+    }
+  };
   const handleCloseUpdateModal = () => setopenUpdateModal(false);
 
   const [ disabled, setDisabled ] = useState(true);
-
-  const { isAuthenticated } = isAuth();
 
   const [comments, setComments] = useState({
     status: 'idle',
@@ -72,24 +82,22 @@ function VideoSideBar({ likes, postId, isliked, handleUpdatePost, handleDeletePo
   };
 
   const handleUpdateData = async values => {
-    const updateData = {};
-
-    if (values.videoUrl) {
-      updateData.videoUrl = values.videoUrl.data;
-    }
-
-    if (values.description) {
-      updateData.description = values.description;
-    }
-
-    if (values.song) {
-      updateData.song = values.song;
-    }
-
-    console.log(updateData.videoUrl);
-
-    await handleUpdatePost(postId, updateData);
-    await handleCloseUpdateModal();
+      const updateData = {};
+  
+      if (values.videoUrl) {
+        updateData.videoUrl = values.videoUrl.data;
+      }
+  
+      if (values.description) {
+        updateData.description = values.description;
+      }
+  
+      if (values.song) {
+        updateData.song = values.song;
+      }
+  
+      await handleUpdatePost(postId, updateData);
+      await handleCloseUpdateModal();
   }
 
   const getCommentsByPost = async() => {

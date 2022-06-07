@@ -57,7 +57,7 @@ function Video({ url, channel, description, song, likes, postId, isliked, handle
             ></video>
 
             <VideoFooter channel={channel} description={description} song={song}/>
-            <VideoSidebar likes={likes} postId={postId} isliked={isliked} handleUpdatePost={handleUpdatePost} handleDeletePost={handleDeletePost}/>
+            <VideoSidebar channel={channel} likes={likes} postId={postId} isliked={isliked} handleUpdatePost={handleUpdatePost} handleDeletePost={handleDeletePost}/>
         </div>
     )
 }

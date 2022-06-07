@@ -4,12 +4,15 @@ import Modal from '@mui/material/Modal';
 import MessageIcon from '@mui/icons-material/Message';
 import { useForm } from "react-hook-form";
 import axios from '../../api/request';
+import isAuth from '../../hooks/useAuth';
 import './Comment.css';
 
 function Comment({ comments, postId, getCommentsByPost }) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const { isAuthenticated } = isAuth();
 
     const { 
         register, 
@@ -24,22 +27,26 @@ function Comment({ comments, postId, getCommentsByPost }) {
         );
 
     const onSubmitCreateComment = async (values) => {
-        const { content } = values;
-        try {
-            const res = await axios({
-                url: '/api/comments',
-                method: 'POST',
-                data: {
-                    postId,
-                    content,
+        if (isAuthenticated) {
+            const { content } = values;
+            try {
+                const res = await axios({
+                    url: '/api/comments',
+                    method: 'POST',
+                    data: {
+                        postId,
+                        content,
+                    }
+                })
+                if (res.data.success) {
+                    resetField('content');
+                    getCommentsByPost();
                 }
-            })
-            if (res.data.success) {
-                resetField('content');
-                getCommentsByPost();
+            } catch (err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.log(err);
+        } else {
+            alert("You need login to comment");
         }
     }
 

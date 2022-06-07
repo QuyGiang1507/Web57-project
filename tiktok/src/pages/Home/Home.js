@@ -3,6 +3,8 @@ import Video from "../../components/Video/Video";
 import Header from '../../components/Header/Header';
 import request from '../../api/request';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import isAuth from '../../hooks/useAuth';
+import LinearProgress from '@mui/material/LinearProgress';
 import './Home.css'
 
 const MAX_LENGTH = 3;
@@ -15,9 +17,12 @@ function Home () {
     const [skip, setSkip] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
+    const { isAuthenticated, user } = isAuth();
+
     const nextPageUrl = useMemo(() => {
         if (skip >= 0) {
-            return `${process.env.REACT_APP_BASE_PATH}/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`
+            return `${process.env.REACT_APP_BASE_PATH}/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
+            // return `http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
         };
         return null;
     }, [skip])
@@ -114,24 +119,37 @@ function Home () {
     };
 
     const handleDeletePost = async (postId) => {
-        try {
-            const res = await request({
-                url: `/api/posts/${postId}`,
-                method: 'DELETE',
-            })
+        const postDelete = postData.data.filter((post) => {
+            return post._id === postId;
+        })
 
-            if (res.data.success) {
-                const newPostData = postData.data.filter((post) => {
-                    return post._id !== res.data.data._id;
-                });
+        if (isAuthenticated) {
+            if (postDelete[0].createdBy._id === user._id) {
+
+                try {
+                    const res = await request({
+                        url: `/api/posts/${postId}`,
+                        method: 'DELETE',
+                    })
         
-                setPostData(() => ({
-                    status: "success",
-                    data: newPostData,
-                }))
+                    if (res.data.success) {
+                        const newPostData = postData.data.filter((post) => {
+                            return post._id !== res.data.data._id;
+                        });
+                
+                        setPostData(() => ({
+                            status: "success",
+                            data: newPostData,
+                        }))
+                    }
+                } catch (err) {
+                    alert(err.response.message);
+                }
+            } else {
+                alert("This post is not yours");
             }
-        } catch (err) {
-            alert(err.response.message);
+        } else {
+            alert("You need login to delete the post");
         }
     };
 
@@ -149,7 +167,7 @@ function Home () {
                     dataLength={skip + MAX_LENGTH}
                     next={fetchMorePosts}
                     hasMore={hasMore}
-                    loader={<h4>Loading...</h4>}
+                    loader={<div><LinearProgress/></div>}
                 >
                     {postData.data.map((post) => (
                         <Video 

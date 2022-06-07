@@ -128,9 +128,11 @@ const createPost = async (req, res) => {
     const { user } = req;
     console.log('create post', user);
 
-    const newPostData = req.body;
+    const { description, song, videoUrl } = req.body;
     const newPost = await PostModel.create({
-        ...newPostData,
+        description,
+        song,
+        videoUrl,
         createdBy: user._id,
     });
 
@@ -149,13 +151,13 @@ const updatePost = async (req, res) => {
     const updatePostData = req.body;
 
     const updatePost = await PostModel.findOneAndUpdate(
-        { _id: postId, createdBy: user._id },
+        { _id: postId },
         updatePostData,
         { new: true },
     );
 
     if (!updatePost) {
-        throw new Error('Not found post');
+        throw new Error('This post is not yours');
     }
 
     res.send({
@@ -167,6 +169,7 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try {
         const { postId } = req.params;
+        const { user } = req;
 
         const deletedPost = await PostModel.findOneAndDelete(
             { _id: postId },
@@ -181,7 +184,7 @@ const deletePost = async (req, res) => {
         res.status(400).send({
             success: 0,
             data: null,
-            message: err.message || 'Something went wrong',
+            message: "This post is not yours",
         });
     }
 };
