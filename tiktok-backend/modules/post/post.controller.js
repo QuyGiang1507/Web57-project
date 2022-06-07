@@ -145,13 +145,15 @@ const createPost = async (req, res) => {
 const updatePost = async (req, res) => {
     const { postId } = req.params;
     const { user } = req;
-
-    console.log(user);
+    const userId = user._id.toString();
 
     const updatePostData = req.body;
 
     const updatePost = await PostModel.findOneAndUpdate(
-        { _id: postId },
+        { $and: [
+            {_id: postId,},
+            {createdBy: userId}
+        ] },
         updatePostData,
         { new: true },
     );
@@ -170,11 +172,19 @@ const deletePost = async (req, res) => {
     try {
         const { postId } = req.params;
         const { user } = req;
+        const userId = user._id.toString();
 
         const deletedPost = await PostModel.findOneAndDelete(
-            { _id: postId },
+            { $and: [
+                {_id: postId,},
+                {createdBy: userId}
+            ] },
             { new: true },
         );
+
+        if (!deletedPost) {
+            throw new Error('This post is not yours');
+        }
 
         res.send({
             success: 1,

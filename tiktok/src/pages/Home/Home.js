@@ -119,18 +119,20 @@ function Home () {
     };
 
     const handleDeletePost = async (postId) => {
-        const postDelete = postData.data.filter((post) => {
-            return post._id === postId;
-        })
+        // const postDelete = postData.data.filter((post) => {
+        //     return post._id === postId;
+        // })
 
         if (isAuthenticated) {
-            if (postDelete[0].createdBy._id === user._id) {
+            // if (postDelete[0].createdBy._id === user._id) {
 
                 try {
                     const res = await request({
                         url: `/api/posts/${postId}`,
                         method: 'DELETE',
                     })
+
+                    console.log(res)
         
                     if (res.data.success) {
                         const newPostData = postData.data.filter((post) => {
@@ -143,11 +145,11 @@ function Home () {
                         }))
                     }
                 } catch (err) {
-                    alert(err.response.message);
+                    alert(err.response.data.message);
                 }
-            } else {
-                alert("This post is not yours");
-            }
+            // } else {
+            //     alert("This post is not yours");
+            // }
         } else {
             alert("You need login to delete the post");
         }
