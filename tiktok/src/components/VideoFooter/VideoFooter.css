@@ -20,6 +20,10 @@
   text-shadow: 1px 1px 4px darkblue;
 }
 
+.videoFooter__song {
+  text-shadow: 1px 1px 4px darkblue;
+}
+
 .videoFooter__icon {
   position: absolute;
 }
