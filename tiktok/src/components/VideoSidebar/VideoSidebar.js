@@ -124,6 +124,8 @@ function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handl
         setLikeCount(likeCount + 1);
         const res = await request.put(`/api/posts/${postId}/like`);
         console.log(res);
+      } else {
+        alert("You need login to react the post");
       }
     } catch (err) {
       console.log(err);
@@ -137,6 +139,8 @@ function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handl
         setLikeCount(likeCount - 1);
         const res = await request.put(`/api/posts/${postId}/dislike`);
         console.log(res);
+      } else {
+        alert("You need login to react the post");
       }
     } catch (err) {
       console.log(err);
