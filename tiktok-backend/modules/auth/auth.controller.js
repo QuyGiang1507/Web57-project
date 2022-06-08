@@ -9,7 +9,7 @@ const signUp = async (req, res, next) => {
     const existedUser = await UserModel.findOne({ username });
     
     if (existedUser) {
-        throw new HttpError('đăng ký thất bại, username đã tồn tại', 400);
+        throw new HttpError('Signup failed, username already existed', 400);
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -35,7 +35,7 @@ const login = async (req, res) => {
     const existedUser = await UserModel.findOne({ username });
 
     if (!existedUser) {
-        throw new HttpError('đăng nhập thất bại, username không tồn tại', 400);
+        throw new HttpError('Signin failed, username dont exist', 400);
     }
 
     const hashPassword = existedUser.password;
@@ -43,7 +43,7 @@ const login = async (req, res) => {
     const matchedPassword = await bcrypt.compare(password, hashPassword);
 
     if (!matchedPassword) {
-        throw new HttpError('đăng nhập thất bại (password ko đúng)', 400);
+        throw new HttpError('Signin failed, password not correct', 400);
     }
 
     const token = tokenProvider.sign(existedUser._id);
