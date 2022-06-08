@@ -9,9 +9,11 @@ import Comment from '../Comment/Comment';
 import request from '../../api/request';
 import isAuth from '../../hooks/useAuth';
 import Modal from '@mui/material/Modal';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import { useForm } from 'react-hook-form';
 
-function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
+function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handleDeletePost, muted, onMuted, onUnmuted }) {
   const [linked, setLinked] = useState(isliked);
   const [likeCount, setLikeCount] = useState(likes);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -198,6 +200,17 @@ function VideoSideBar({ channel, likes, postId, isliked, handleUpdatePost, handl
       <div className="videoSidebar__button">
         <Comment comments={comments} postId={postId} getCommentsByPost={getCommentsByPost}/>
         <p>{comments.data.total}</p>
+      </div>
+
+      <div className="videoSidebar__button">
+        {muted ? (
+          <VolumeOffIcon fontSize="large" onClick={onUnmuted} />
+        ) : (
+          <VolumeUpIcon 
+            fontSize="large" 
+            onClick={onMuted}
+          />        
+        )}
       </div>
 
       <Modal

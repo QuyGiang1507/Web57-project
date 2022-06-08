@@ -21,8 +21,8 @@ function Home () {
 
     const nextPageUrl = useMemo(() => {
         if (skip >= 0) {
-            return `${process.env.REACT_APP_BASE_PATH}/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
-            // return `http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
+            // return `${process.env.REACT_APP_BASE_PATH}/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
+            return `http://localhost:9000/api/posts/?limit=${MAX_LENGTH}&skip=${skip}`;
         };
         return null;
     }, [skip])

@@ -5,6 +5,7 @@ import VideoSidebar from "../VideoSidebar/VideoSidebar";
 
 function Video({ url, channel, description, song, likes, postId, isliked, handleUpdatePost, handleDeletePost }) {
     const [playing, setPlaying] = useState(false);
+    const [ muted, setMuted] = useState(false);
     const videoRef = useRef(null); 
 
     const onPlay = () => {
@@ -15,6 +16,14 @@ function Video({ url, channel, description, song, likes, postId, isliked, handle
     const onPause = () => {
         videoRef.current.pause();
         setPlaying(false);
+    }
+
+    const onMuted = () => {
+        setMuted(true);
+    }
+
+    const onUnmuted = () => {
+        setMuted(false);
     }
 
     useEffect(() => {
@@ -54,10 +63,21 @@ function Video({ url, channel, description, song, likes, postId, isliked, handle
                 loop
                 ref={videoRef}
                 src={url}
+                muted={muted}
             ></video>
 
             <VideoFooter channel={channel} description={description} song={song}/>
-            <VideoSidebar channel={channel} likes={likes} postId={postId} isliked={isliked} handleUpdatePost={handleUpdatePost} handleDeletePost={handleDeletePost}/>
+            <VideoSidebar 
+                channel={channel} 
+                likes={likes} 
+                postId={postId} 
+                isliked={isliked} 
+                handleUpdatePost={handleUpdatePost} 
+                handleDeletePost={handleDeletePost}
+                muted={muted}
+                onMuted={onMuted}
+                onUnmuted={onUnmuted}
+            />
         </div>
     )
 }
