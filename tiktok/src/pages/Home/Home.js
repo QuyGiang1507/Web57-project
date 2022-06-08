@@ -17,7 +17,7 @@ function Home () {
     const [skip, setSkip] = useState(0);
     const [hasMore, setHasMore] = useState(true);
 
-    const { isAuthenticated, user } = isAuth();
+    const { isAuthenticated } = isAuth();
 
     const nextPageUrl = useMemo(() => {
         if (skip >= 0) {
