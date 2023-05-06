@@ -36,13 +36,14 @@ function Home () {
                 status: "loading",
             }));
 
-            const res = await request.get(nextPageUrl)
+            const res = await request.get("/api/posts")
             if (res.data.success) {
                 setPostData((preState) => ({
                     ...preState,
                     status: 'success',
                     data: res.data.data.reaction
                 }))
+                console.log(res);
                 setSkip(skip + MAX_LENGTH);
             } else {
                 setSkip(-1);
