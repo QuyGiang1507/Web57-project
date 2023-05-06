@@ -2,6 +2,7 @@
   position: relative;
   background-color: black;
   border-radius: 10px;
+  border: 1px solid #734df0;
   width: 80%;
   height: 80vh;
   max-width: 360px;

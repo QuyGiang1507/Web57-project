@@ -7,7 +7,7 @@ html {
 }
 
 .app {
-  background-color: #199ee6;
+  background-color: black;
   display: grid;
   place-items: center;
   width: 100%;

@@ -16,6 +16,7 @@
     text-decoration: none;
     font-size: 32px;
     font-weight: bold;
+    color: black;
 }
 
 .header__menu {
@@ -32,6 +33,7 @@
 
 .header__upload, .header__user, .header__login {
     padding: 0 10px;
+    color: black;
 }
 
 .header__upload, .header__user, .header__login:hover {
